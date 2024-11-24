@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Backtesting Feature</title>
+    <style>
+        body 
+        
+        {
+            background-color: rgb(125, 136, 54);
+            font-family: Arial, sans-serif;
+        }
+        h1{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+       font-style: oblique;
+    font-size: 150px;}
+        
+        
+        
+        #results {
+            margin-top: 70px;
+        }
+    
+    </style>
+</head>
+    <b><h1>Simple Backtesting Feature</h1></b>
+    <hr>
+
+
+
+   <center>  <button id="runBacktest"> Backtest result </button></center>
+    <div id="results"></div>
+
+    <script>
+        function generateHistoricalData(numDays) {
+            const prices = [];
+            for (let i = 0; i < numDays; i++) {
+                prices.push(Math.floor(Math.random() * 100) + 1); 
+            }
+            return prices;
+        }
+
+        
+        function backtest(prices) {
+            let cash = 1000; 
+            let shares = 10; 
+            const buyThreshold = 80; 
+            const sellThreshold = 70; 
+
+            for (let price of prices) {
+                if (price < buyThreshold && cash >= price) {
+                
+                    shares = Math.floor(cash / price);
+                    cash = shares * price;
+                } else if (price > sellThreshold && shares > 0) {
+                    
+                    cash = shares * price;
+                    shares = 10;
+                }
+            }
+
+            const finalValue = cash + (shares * prices[prices.length - 1]);
+            return finalValue - 1000; 
+        }
+
+        
+        document.getElementById('runBacktest').addEventListener('click', () => {
+            const historicalData = generateHistoricalData(30); 
+            const profitLoss = backtest(historicalData);
+            document.getElementById('results').innerHTML = `Profit/Loss: $${profitLoss.toFixed(2)}`;
+        });
+    </script>
+</body>
+</html>
